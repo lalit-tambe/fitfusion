@@ -1,0 +1,27 @@
+{
+  "name": "fitfusion",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lalit-tambe/fitfusion.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lalit-tambe/fitfusion/issues"
+  },
+  "homepage": "https://github.com/lalit-tambe/fitfusion#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}
