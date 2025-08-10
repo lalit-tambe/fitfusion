@@ -15,6 +15,7 @@ module.exports = {
     await db.collection('users').insertOne({
       name: 'Super Admin',
       email: 'admin@fitfusion.com',
+      role: 'admin',
       password: hashedPassword,
       createdAt: new Date(),
       updatedAt: new Date(),
