@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt')
-
 module.exports = {
   /**
    * @param db {import('mongodb').Db}
@@ -7,18 +5,51 @@ module.exports = {
    * @returns {Promise<void>}
    */
   async up(db, client) {
-    // TODO write your migration here.
-    // See https://github.com/seppevs/migrate-mongo/#creating-a-new-migration-script
-    // Example:
-    // await db.collection('albums').updateOne({artist: 'The Beatles'}, {$set: {blacklisted: true}});
-    const hashedPassword = await bcrypt.hash('admin123', 10)
-    await db.collection('users').insertOne({
-      name: 'Super Admin',
-      email: 'admin@fitfusion.com',
-      role: 'admin',
-      password: hashedPassword,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    await db.collection('users', {
+      validator: {
+        $jsonSchema: {
+          bsonType: "object",
+          required: ["email", "password", "role", "profile"],
+          properties: {
+            email: { bsonType: "string", description: "must be a string and is required" },
+            password: { bsonType: "string", description: "hashed password required" },
+            role: { enum: ["super_admin", "admin", "trainer", "member"], description: "user role" },
+            profile: {
+              bsonType: "object",
+              properties: {
+                firstName: { bsonType: "string" },
+                lastName: { bsonType: "string" },
+                phone: { bsonType: "string" },
+                avatar: { bsonType: "string" },
+                dateOfBirth: { bsonType: "date" },
+                gender: { enum: ["male", "female", "other"] },
+                address: {
+                  bsonType: "object",
+                  properties: {
+                    street: { bsonType: "string" },
+                    city: { bsonType: "string" },
+                    state: { bsonType: "string" },
+                    zipCode: { bsonType: "string" },
+                    country: { bsonType: "string" }
+                  }
+                },
+                emergencyContact: {
+                  bsonType: "object",
+                  properties: {
+                    name: { bsonType: "string" },
+                    phone: { bsonType: "string" },
+                    relationship: { bsonType: "string" }
+                  }
+                }
+              }
+            },
+            isActive: { bsonType: "bool" },
+            lastLogin: { bsonType: "date" },
+            createdAt: { bsonType: "date" },
+            updatedAt: { bsonType: "date" }
+          }
+        }
+      }
     });
   },
 
@@ -28,9 +59,6 @@ module.exports = {
    * @returns {Promise<void>}
    */
   async down(db, client) {
-    // TODO write the statements to rollback your migration (if possible)
-    // Example:
-    // await db.collection('albums').updateOne({artist: 'The Beatles'}, {$set: {blacklisted: false}});
-    await db.collection('admins').deleteOne({ email: 'admin@fitfusion.com' });
+    await db.collection('users').drop();
   }
 };
