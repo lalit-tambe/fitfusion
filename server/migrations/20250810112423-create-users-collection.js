@@ -5,7 +5,7 @@ module.exports = {
    * @returns {Promise<void>}
    */
   async up(db, client) {
-    await db.collection('users', {
+    await db.createCollection('users', {
       validator: {
         $jsonSchema: {
           bsonType: "object",
@@ -51,6 +51,9 @@ module.exports = {
         }
       }
     });
+
+    // Indexes
+    await db.collection('users').createIndex({ email: 1 }, { unique: true });
   },
 
   /**

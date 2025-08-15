@@ -1,10 +1,13 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const helmet = require('helmet');
-const compression = require('compression');
-const morgan = require('morgan');
-require('dotenv').config();
+import express from 'express'
+import mongoose from 'mongoose';
+import cors from 'cors'
+import helmet from 'helmet';
+import compression from 'compression';
+import morgan from 'morgan';
+import routes from './routes/index.js'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const app = express();
 
@@ -21,6 +24,9 @@ app.get('/', (req, res) => {
   res.json({ message: 'FitFusion API is running!' });
 });
 
+
+app.use('/api', routes);
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -32,4 +38,4 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-module.exports = app;
+export default app

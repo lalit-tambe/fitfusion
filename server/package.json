@@ -8,7 +8,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed:users": "node seeders/userSeeder.js"
   },
-  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
